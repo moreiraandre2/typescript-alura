@@ -1,3 +1,4 @@
+import { inspect } from "../decorators/inspect-decorator.js";
 import { logarTempoExecucao } from "../decorators/logar-tempo-de-execucao.js";
 import { Negociacao } from "../models/negociacao.js";
 import { Negociacoes } from "../models/negociacoes.js";
@@ -19,8 +20,8 @@ export class NegociacaoController {
         this.negociacoesView.update(this.negociacoes);
     }
 
-    @logarTempoExecucao()
-
+    @logarTempoExecucao(true)
+    @inspect()
     adiciona() : void {
         const negociacao = Negociacao.criarDe(
             this.inputData.value,
