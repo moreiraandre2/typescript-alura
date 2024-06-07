@@ -18,13 +18,12 @@ export class NegociacoesView extends View<Negociacoes> {
             <tbody>
             ${
                 model.listar().map(negociacao => {
-                    return `
-                    <tr>
-                        <td>${this.formatarData(negociacao.getData)}</td>
-                        <td>${negociacao.getQuantidade}</td>
-                        <td>${negociacao.getValor}</td>
-                    </tr>
-                    `;
+                    return  `<tr>
+                                <td>${this.formatarData(negociacao.getData)}</td>
+                                <td>${negociacao.getQuantidade}</td>
+                                <td>${negociacao.getValor}</td>
+                            </tr>
+                            `
                 })
             }
             </tbody>

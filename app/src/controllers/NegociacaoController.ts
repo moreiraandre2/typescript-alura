@@ -3,6 +3,8 @@ import { inspect } from "../decorators/inspect-decorator.js";
 import { logarTempoExecucao } from "../decorators/logar-tempo-de-execucao.js";
 import { Negociacao } from "../models/negociacao.js";
 import { Negociacoes } from "../models/negociacoes.js";
+import { NegociacoesService } from "../services/negociacoes-service.js";
+import { imprimir } from "../utils/imprimir.js";
 import { MensagemView } from "../views/mensagenView.js";
 import { NegociacoesView } from "../views/negociacoesView.js";
 
@@ -16,17 +18,15 @@ export class NegociacaoController {
     private negociacoes = new Negociacoes();
     private negociacoesView = new NegociacoesView("#negociacoes-view");
     private mensagemView = new MensagemView("#mensagem-view");
+    private negociacoesService = new NegociacoesService();
 
     constructor() {
-        this.inputData = document.querySelector('#data') as HTMLInputElement;
-        this.inputQuantidade = document.querySelector('#quantidade') as HTMLInputElement;
-        this.inputValor = document.querySelector('#valor') as HTMLInputElement;
         this.negociacoesView.update(this.negociacoes);
     }
 
     @logarTempoExecucao(true)
     @inspect()
-    adiciona() : void {
+    public adiciona() : void {
         const negociacao = Negociacao.criarDe(
             this.inputData.value,
             this.inputQuantidade.value,
@@ -35,6 +35,7 @@ export class NegociacaoController {
         this.negociacoes.adicionar(negociacao);
         this.mensagemView.update('Negociação criada com sucesso!');
         this.negociacoesView.update(this.negociacoes);
+        imprimir(negociacao, this.negociacoes);
 
         this.limparFormulario(
             [
@@ -45,9 +46,19 @@ export class NegociacaoController {
             this.inputData
         );
 
-    }    
+    }  
 
-    limparFormulario(inputs: Array<any>, inputFocus: HTMLInputElement) {
+    public importar(): void {
+        this.negociacoesService.obterNegociacoesDoDia()
+        .then(negociacoesDeHoje => {
+            for(let negociacao of negociacoesDeHoje) {
+                this.negociacoes.adicionar(negociacao);
+            }
+            this.negociacoesView.update(this.negociacoes);
+        });
+    }
+
+    private limparFormulario(inputs: Array<any>, inputFocus: HTMLInputElement) {
         inputs.map(element => {
             element.value = ''
         });

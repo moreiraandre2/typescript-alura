@@ -1,15 +1,18 @@
+import { Imprimivel } from "../utils/imprimivel.js";
+
 interface NegociacaoData {
     data: Date,
     quantidade : number, 
     valor : number
 }
 
-export class Negociacao {
+export class Negociacao extends Imprimivel {
     private data : Date;
     private quantidade : number;
     private valor : number;
 
     constructor(negociacaoData : NegociacaoData) {
+        super();
         this.data = negociacaoData.data;
         this.quantidade = negociacaoData.quantidade;
         this.valor = negociacaoData.valor;
@@ -30,6 +33,14 @@ export class Negociacao {
 
     public  get volume(): number {
         return this.quantidade * this.valor;
+    }
+
+    public paraTexto(): string {
+        return `
+            Data: ${this.data},
+            Quantidade: ${this.quantidade},
+            Valor: ${this.valor}
+        `;
     }
 
     public static criarDe(dataString: string, quantidadeString: string, valorString: string): Negociacao {
